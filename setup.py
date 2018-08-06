@@ -31,9 +31,6 @@ here = os.path.abspath(os.path.dirname(__file__))
 with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
-# Load the package's __version__.py module as a dictionary.
-about = {'__version__': '0.3.0'}
-
 
 class PublishCommand(Command):
     """Support setup.py publish."""
@@ -71,7 +68,6 @@ class PublishCommand(Command):
 # Where the magic happens:
 setup(
     name=NAME,
-    version=about['__version__'],
     description=DESCRIPTION,
     long_description=long_description,
     author=AUTHOR,
@@ -81,7 +77,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs', 'etc')),
     install_requires=REQUIRED,
     use_scm_version=True,
-    setup_requires=['setuptools_scm'],
+    setup_requires=['setuptools_scm', 'twine'],
     extras_require={
         'test': ['betamax', 'pytest'],
     },
