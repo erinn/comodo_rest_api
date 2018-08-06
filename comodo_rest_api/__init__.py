@@ -179,15 +179,3 @@ class ComodoTLSService(ComodoCA):
         # Anything else is an error
         else:
             return jsend.error(result.json()['description'])
-
-if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser(description='Comodo REST API Library')
-    parser.add_argument('-ll', '--loglevel',
-        type=str,
-        choices=['DEBUG','INFO','WARNING','ERROR','CRITICAL'],
-        help='Set the logging level')
-    args = parser.parseargs()
-
-    logging.basicConfig(level=args.loglevel)

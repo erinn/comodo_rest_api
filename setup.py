@@ -13,7 +13,7 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = 'comodo_api'
-DESCRIPTION = 'Simply python access to the Comodo CCM REST API'
+DESCRIPTION = 'Simpler python access to the Comodo CCM REST API'
 URL = 'https://github.com/erinn/comodo_rest_api'
 EMAIL = 'erinn.looneytriggs@gmail.com'
 AUTHOR = 'Erinn Looney-Triggs'
@@ -93,7 +93,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
