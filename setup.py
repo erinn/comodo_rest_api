@@ -80,6 +80,8 @@ setup(
     keywords=['comodo-rest-api'],
     packages=find_packages(exclude=('tests', 'docs', 'etc')),
     install_requires=REQUIRED,
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     extras_require={
         'test': ['betamax', 'pytest'],
     },
