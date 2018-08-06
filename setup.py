@@ -12,7 +12,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'comodo_api'
+NAME = 'comodo_rest_api'
 DESCRIPTION = 'Simpler python access to the Comodo CCM REST API'
 URL = 'https://github.com/erinn/comodo_rest_api'
 EMAIL = 'erinn.looneytriggs@gmail.com'
