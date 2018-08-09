@@ -9,7 +9,8 @@ customer_login_uri = os.environ.get('CUSTOMER_LOGIN_URI', 'comodo')
 login = os.environ.get('LOGIN', 'comodo')
 org_id = os.environ.get('ORG_ID', '1234')
 password = os.environ.get('PASSWORD', 'fubar')
-client_cert_auth = os.environ.get('CLIENT_CERT_AUTH', False)
+# Whether to use Client Certificate Authentication against the Comodo API
+client_cert_auth = os.environ.get('CLIENT_CERT_AUTH') in ['True', 'true', '1']
 client_public_certificate = os.environ.get('CLIENT_PUBLIC_CERTIFICATE', '/tmp/client.crt')
 client_private_key = os.environ.get('CLIENT_PRIVATE_KEY', '/tmp/client.key')
 csr = os.environ.get('CSR', b'----BEGIN CERTIFICATE REQUEST-----\n<CSR_DATA>\n-----END CERTIFICATE REQUEST-----')
@@ -83,24 +84,6 @@ class TestComodoAPI(object):
         assert 'status' in result
         assert 'fail' in result['status']
 
-    def test_revoke(self, api_client):
-        recorder = Betamax(api_client.session)
-        with recorder.use_cassette('ComodoAPI_revoke', serialize_with='prettyjson'):
-            result = api_client.revoke(cert_id=655674, reason='Revoked for testing')
-
-        assert isinstance(result, dict)
-        assert 'status' in result
-        assert 'success' in result['status']
-
-    def test_revoke_failure(self, bad_api_client):
-        recorder = Betamax(bad_api_client.session)
-        with recorder.use_cassette('ComodoAPI_revoke_failure', serialize_with='prettyjson'):
-            result = bad_api_client.revoke(cert_id=123456, reason='Revoked for testing')
-
-        assert isinstance(result, dict)
-        assert 'status' in result
-        assert 'error' in result['status']
-
     def test_collect(self, api_client):
         recorder = Betamax(api_client.session)
         with recorder.use_cassette('ComodoAPI_collect', serialize_with='prettyjson'):
@@ -122,6 +105,44 @@ class TestComodoAPI(object):
         assert isinstance(result, dict)
         assert 'status' in result
         assert 'fail' in result['status']
+
+    def test_renew(self, api_client):
+        recorder = Betamax(api_client.session)
+        with recorder.use_cassette('ComodoAPI_renew', serialize_with='prettyjson'):
+            result = api_client.renew(cert_id=655944)
+
+        assert isinstance(result, dict)
+        assert 'status' in result
+        assert 'success' in result['status']
+        assert 'data' in result
+        assert 'certificate_id' in result['data']
+
+    def test_renew_failure(self, bad_api_client):
+        recorder = Betamax(bad_api_client.session)
+        with recorder.use_cassette('ComodoAPI_renew_failure', serialize_with='prettyjson'):
+            result = bad_api_client.renew(cert_id=655944)
+
+        assert isinstance(result, dict)
+        assert 'status' in result
+        assert 'fail' in result['status']
+
+    def test_revoke(self, api_client):
+        recorder = Betamax(api_client.session)
+        with recorder.use_cassette('ComodoAPI_revoke', serialize_with='prettyjson'):
+            result = api_client.revoke(cert_id=655674, reason='Revoked for testing')
+
+        assert isinstance(result, dict)
+        assert 'status' in result
+        assert 'success' in result['status']
+
+    def test_revoke_failure(self, bad_api_client):
+        recorder = Betamax(bad_api_client.session)
+        with recorder.use_cassette('ComodoAPI_revoke_failure', serialize_with='prettyjson'):
+            result = bad_api_client.revoke(cert_id=123456, reason='Revoked for testing')
+
+        assert isinstance(result, dict)
+        assert 'status' in result
+        assert 'error' in result['status']
 
     def test_submit(self, api_client):
         recorder = Betamax(api_client.session)

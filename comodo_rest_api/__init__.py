@@ -172,6 +172,23 @@ class ComodoTLSService(ComodoCA):
         else:
             return jsend.fail(result.json())
 
+    def renew(self, cert_id):
+        """
+        Renew a certificate by ID.
+
+        :param int cert_id: The certificate ID
+        :return: The result of the operation, 'Successful' on success
+        :rtype: dict
+        """
+
+        url = self._create_url('renewById/{}'.format(cert_id))
+        result = self.session.post(url, json='')
+
+        if result.status_code == 200:
+            return jsend.success({'certificate_id': result.json()['sslId']})
+        else:
+            return jsend.fail(result.json())
+
     def revoke(self, cert_id, reason=''):
         """
         Revoke a certificate.
@@ -183,7 +200,7 @@ class ComodoTLSService(ComodoCA):
         """
         url = self._create_url('revoke/{}'.format(cert_id))
         data = {'reason': reason}
-        result=self.session.post(url, json=data,)
+        result = self.session.post(url, json=data,)
 
         if result.status_code == 204:
             return jsend.success()
