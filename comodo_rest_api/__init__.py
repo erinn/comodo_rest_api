@@ -102,24 +102,26 @@ class ComodoTLSService(ComodoCA):
 
 
     def _create_url(self, suffix):
-        '''
+        """
+        Create a URL from the API URL that the instance was initialized with.
 
         :param str suffix: The suffix of the URL you wish to create i.e. for https://example.com/foo the suffix would be /foo
         :return: The full URL
         :rtype: str
-        '''
+        """
         url = self.api_url + suffix
         logger.debug('URL created: %s' % url)
 
         return url
 
     def _get(self, url):
-        '''
+        """
+        GET a given URL
 
-        :param url:
-        :return:
+        :param str url: A URL
+        :return: The requests session object
 
-        '''
+        """
         logger.debug('Performing a GET on url: %s' % url)
         result = self.session.get(url)
 
