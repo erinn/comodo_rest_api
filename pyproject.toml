@@ -14,4 +14,4 @@ requires = [
     "pyjsend",
     "requests",
 ]
-requires-python = "3"
+requires-python = ">=3"
