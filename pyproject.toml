@@ -15,4 +15,4 @@ requires = [
     "requests",
 ]
 requires-python = ">=3"
-keywrods = "sectigo comodo jsend"
+keywords = "sectigo comodo jsend"
