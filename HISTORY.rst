@@ -2,6 +2,11 @@
 
 History
 -------
+0.3.0 (2019-07-26)
+++++++++++++++++++
+* Move to flit as the installer
+* Rewrite README
+
 0.1.3 (2018-08-06)
 ++++++++++++++++++
 

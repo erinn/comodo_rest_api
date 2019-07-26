@@ -1,15 +1,13 @@
+"""A simpler RESTful API for Comodo/Sectigo"""
+
+__version__ = "0.3.0"
+
 import jsend
 import logging
 import requests
 
 logger = logging.getLogger(__name__)
 
-from pkg_resources import get_distribution, DistributionNotFound
-try:
-    __version__ = get_distribution(__name__).version
-except DistributionNotFound:
-    # package is not installed
-    pass
 
 class ComodoCA(object):
     """
@@ -99,7 +97,6 @@ class ComodoTLSService(ComodoCA):
             'customerUri': self.customer_login_uri
         }
         self.session.headers.update(self.headers)
-
 
     def _create_url(self, suffix):
         """
