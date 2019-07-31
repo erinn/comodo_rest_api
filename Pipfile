@@ -9,6 +9,8 @@ betamax = "*"
 betamax-serializers = "*"
 pylint = "*"
 pep8 = "*"
+keyring = "*"
+ipython = "*"
 
 [packages]
 pyjsend = "*"

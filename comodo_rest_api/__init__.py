@@ -85,8 +85,6 @@ class ComodoTLSService(ComodoCA):
         self.password = kwargs.get('password')
         self.client_cert_auth = kwargs.get('client_cert_auth')
         self.session = requests.Session()
-        # Because Comodo is crap at designing APIs (in my opinion) we have to get the wsdl
-        # then modify the transport to use client certs after that.
         if self.client_cert_auth:
             self.client_public_certificate = kwargs.get('client_public_certificate')
             self.client_private_key = kwargs.get('client_private_key')
@@ -107,7 +105,7 @@ class ComodoTLSService(ComodoCA):
         :rtype: str
         """
         url = self.api_url + suffix
-        logger.debug('URL created: %s' % url)
+        logger.debug('URL created: %s', url)
 
         return url
 
@@ -119,11 +117,11 @@ class ComodoTLSService(ComodoCA):
         :return: The requests session object
 
         """
-        logger.debug('Performing a GET on url: %s' % url)
+        logger.debug('Performing a GET on url: %s', url)
         result = self.session.get(url)
 
-        logger.debug('Result headers: %s' % result.headers)
-        logger.debug('Text result: %s' % result.text)
+        logger.debug('Result headers: %s', result.headers)
+        logger.debug('Text result: %s', result.text)
 
         return result
 
@@ -135,7 +133,11 @@ class ComodoTLSService(ComodoCA):
         :rtype: list
         """
         url = self._create_url('types')
-        result = self._get(url)
+
+        try:
+            result = self._get(url)
+        except ConnectionError:
+            return jsend.error(f'A connection error to {self.api_url} occurred.')
 
         if result.status_code == 200:
             return jsend.success({'types': result.json()})
@@ -154,10 +156,14 @@ class ComodoTLSService(ComodoCA):
 
         url = self._create_url('collect/{}/{}'.format(cert_id, format_type))
 
-        logger.debug('Collecting certificate at URL: %s' % url)
-        result = self._get(url)
+        logger.debug('Collecting certificate at URL: %s', url)
 
-        logger.debug('Collection result code: %s' % result.status_code)
+        try:
+            result = self._get(url)
+        except ConnectionError:
+            return jsend.error(f'A connection error to {self.api_url} occurred.')
+
+        logger.debug('Collection result code: %s', result.status_code)
 
         # The certificate is ready for collection
         if result.status_code == 200:
@@ -181,7 +187,11 @@ class ComodoTLSService(ComodoCA):
         """
 
         url = self._create_url('renewById/{}'.format(cert_id))
-        result = self.session.post(url, json='')
+
+        try:
+            result = self.session.post(url, json='')
+        except ConnectionError:
+            return jsend.error(f'A connection error to {self.api_url} occurred.')
 
         if result.status_code == 200:
             return jsend.success({'certificate_id': result.json()['sslId']})
@@ -199,7 +209,11 @@ class ComodoTLSService(ComodoCA):
         """
         url = self._create_url('revoke/{}'.format(cert_id))
         data = {'reason': reason}
-        result = self.session.post(url, json=data,)
+
+        try:
+            result = self.session.post(url, json=data)
+        except ConnectionError:
+            return jsend.error(f'A connection error to {self.api_url} occurred.')
 
         if result.status_code == 204:
             return jsend.success()
@@ -219,10 +233,11 @@ class ComodoTLSService(ComodoCA):
         :return: The certificate_id and the normal status messages for errors.
         :rtype: dict
         """
+
         cert_types = self.get_cert_types()
 
         # If collection of cert types fails we simply pass the error back.
-        if cert_types['status'] == 'fail':
+        if jsend.is_fail(cert_types) or jsend.is_error(cert_types):
             return cert_types
 
         # Find the certificate type ID
@@ -234,7 +249,10 @@ class ComodoTLSService(ComodoCA):
         data = {'orgId': self.org_id, 'csr': csr, 'subjAltNames': subject_alt_names, 'certType': cert_type_id,
                 'numberServers': 1, 'serverType': -1, 'term': term, 'comments': 'Requested with comodo_proxy',
                 'externalRequester': ''}
-        result = self.session.post(url, json=data)
+        try:
+            result = self.session.post(url, json=data)
+        except ConnectionError:
+            return jsend.error(f'A connection error to {self.api_url} occurred.')
 
         if result.status_code == 200:
             return jsend.success({'certificate_id': result.json()['sslId']})

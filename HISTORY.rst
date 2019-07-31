@@ -2,6 +2,10 @@
 
 History
 -------
+0.4.0 (2019-07-31)
+++++++++++++++++++
+* Catch ConnectionError exceptions and convert them into jsend.
+
 0.3.0 (2019-07-26)
 ++++++++++++++++++
 * Move to flit as the installer
