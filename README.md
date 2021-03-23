@@ -3,7 +3,7 @@ This library provides a simpler restful API interface to Comodo/Sectigo's REST A
 
 ## Installation:
 This program forgoes using setuptools for [flit](https://pypi.org/project/flit/) so
-flit must first be installed in order to install ddi. 
+flit must first be installed in order to install. 
 
 To install flit and comod_rest_api local to your user, in the ddi base directory run:
 
