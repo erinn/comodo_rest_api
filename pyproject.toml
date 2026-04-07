@@ -1,6 +1,27 @@
+[project]
+name = ""
+version = "0.0.1"
+requires-python = ">=3.14"
+dependencies = [
+    "pyjsend",
+    "requests",
+    "flit",
+]
+
 [build-system]
 requires = ["flit"]
 build-backend = "flit.buildapi"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "betamax",
+    "betamax-serializers",
+    "pylint",
+    "pep8",
+    "keyring",
+    "ipython",
+]
 
 [tool.flit.metadata]
 module = "comodo_rest_api"
@@ -16,3 +37,11 @@ requires = [
 ]
 requires-python = ">=3"
 keywords = "sectigo comodo jsend"
+
+[tool.uv]
+package = false
+default-groups = "all"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
